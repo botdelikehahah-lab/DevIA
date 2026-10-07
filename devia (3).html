@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="DevIA">
+<meta name="theme-color" content="#0d1220">
+<title>DevIA</title>
+<style>
+:root{--bg:#0d1220;--panel:#131a2e;--line:#232c47;--txt:#e6eaf6;--mut:#8a94b3;--acc:#7b97ff;--ink:#0b1020;--me:#1d2a52;--code:#0a0f1d;--err:#ff8a8a;--r:14px}
+@media (prefers-color-scheme:light){:root{--bg:#f5f6fb;--panel:#fff;--line:#dfe3f0;--txt:#151a2c;--mut:#5d6786;--acc:#3b5bdb;--ink:#fff;--me:#e4e9ff;--code:#f0f2fa;--err:#c92a2a}}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{background:var(--bg);color:var(--txt);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-text-size-adjust:100%;overscroll-behavior:none}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;background:none;border:0}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.app{display:grid;grid-template-columns:290px 1fr;height:100vh;height:100dvh}
+aside{background:var(--panel);border-right:1px solid var(--line);display:flex;flex-direction:column;min-height:0;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+.brand{display:flex;align-items:center;gap:10px;padding:18px 16px 12px;font-weight:700;font-size:20px;letter-spacing:-.02em}
+.mark{width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,var(--acc),#9b6dff);color:var(--ink);display:grid;place-items:center;font:700 14px ui-monospace,Menlo,Consolas,monospace}
+.new{margin:4px 12px 10px;padding:11px 14px;border-radius:10px;background:var(--acc);color:var(--ink);font-weight:600}
+#list{flex:1;overflow:auto;padding:0 8px}
+.it{display:flex;align-items:center;border-radius:10px}
+.it button.t{flex:1;text-align:left;padding:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.it .x{padding:8px 10px;color:var(--mut);border-radius:8px}
+.it:hover,.it.on{background:var(--bg)}
+.it.on .t{font-weight:600}
+.foot{padding:10px 12px;border-top:1px solid var(--line);display:grid;gap:6px}
+.foot button{text-align:left;padding:9px 10px;border-radius:8px;color:var(--mut);font-size:14px}
+.foot button:hover{background:var(--bg);color:var(--txt)}
+main{display:flex;flex-direction:column;min-width:0;min-height:0}
+header{display:flex;align-items:center;gap:6px;padding:calc(10px + env(safe-area-inset-top)) 14px 10px;border-bottom:1px solid var(--line)}
+header h1{flex:1;font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ib{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;font-size:20px;color:var(--mut)}
+.ib:hover{background:var(--panel);color:var(--txt)}
+#menu{display:none}
+#msgs{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;padding:20px 16px}
+.col{max-width:780px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+.m.me{align-self:flex-end;max-width:85%;background:var(--me);padding:10px 14px;border-radius:var(--r) var(--r) 4px var(--r);white-space:pre-wrap;overflow-wrap:anywhere}
+.m.bot .who{font-size:13px;font-weight:600;color:var(--acc);margin-bottom:4px}
+.body{overflow-wrap:anywhere}
+.body code{font:.88em ui-monospace,Menlo,Consolas,monospace;background:var(--code);padding:2px 6px;border-radius:6px}
+.err{color:var(--err)}
+pre{position:relative;background:var(--code);border:1px solid var(--line);border-radius:12px;margin:10px 0;overflow:hidden}
+pre .bar{display:flex;justify-content:space-between;align-items:center;padding:4px 6px 4px 12px;border-bottom:1px solid var(--line);font-size:12px;color:var(--mut)}
+pre .cp{padding:6px 10px;border-radius:6px;font-size:12px;color:var(--mut)}
+pre .cp:hover{color:var(--txt)}
+pre code{display:block;padding:12px;overflow-x:auto;background:none;white-space:pre;font-size:13.5px;line-height:1.5;border-radius:0}
+.dots span{display:inline-block;width:6px;height:6px;margin-right:4px;border-radius:50%;background:var(--mut);animation:b 1s infinite}
+.dots span:nth-child(2){animation-delay:.15s}.dots span:nth-child(3){animation-delay:.3s}
+@keyframes b{50%{opacity:.2}}
+.empty{margin:auto;text-align:center;padding:8vh 0 0}
+.empty h2{font-size:clamp(24px,5vw,34px);letter-spacing:-.02em;line-height:1.2;margin-bottom:8px}
+.empty p{color:var(--mut);margin-bottom:22px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.chips button{border:1px solid var(--line);background:var(--panel);padding:9px 14px;border-radius:999px;font-size:14px}
+.chips button:hover{border-color:var(--acc)}
+form.cmp{padding:10px 14px calc(12px + env(safe-area-inset-bottom))}
+.box{max-width:780px;margin:0 auto;display:flex;align-items:flex-end;gap:8px;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:8px}
+.box:focus-within{border-color:var(--acc)}
+textarea{flex:1;resize:none;background:none;border:0;outline:0;max-height:200px;padding:8px 8px;line-height:1.4}
+#go{width:42px;height:42px;border-radius:12px;background:var(--acc);color:var(--ink);font-size:20px;font-weight:700;flex:none}
+.hint{max-width:780px;margin:6px auto 0;text-align:center;font-size:12px;color:var(--mut)}
+dialog{margin:auto;width:min(480px,calc(100% - 24px));max-height:92dvh;overflow:auto;background:var(--panel);color:var(--txt);border:1px solid var(--line);border-radius:18px;padding:22px}
+dialog::backdrop{background:rgba(5,8,18,.6)}
+dialog h2{font-size:18px;margin-bottom:14px}
+label{display:block;font-size:14px;font-weight:600;margin:12px 0 5px}
+.f{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:16px}
+.row{display:flex;gap:8px}
+.note{font-size:13px;color:var(--mut);margin-top:6px}
+.acts{display:flex;justify-content:flex-end;gap:8px;margin-top:20px}
+.acts button{padding:10px 16px;border-radius:10px;border:1px solid var(--line)}
+.acts .pri{background:var(--acc);color:var(--ink);border-color:var(--acc);font-weight:600}
+#ov{display:none}
+@media (max-width:820px){
+ .app{grid-template-columns:1fr}
+ aside{position:fixed;inset:0 auto 0 0;width:min(310px,86vw);z-index:20;transform:translateX(-100%);transition:transform .22s}
+ body.open aside{transform:none}
+ body.open #ov{display:block;position:fixed;inset:0;background:rgba(5,8,18,.55);z-index:10}
+ #menu{display:grid}
+ .hint{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+ <aside>
+  <div class="brand"><span class="mark">&lt;/&gt;</span>DevIA</div>
+  <button class="new" id="new">Nouvelle discussion</button>
+  <div id="list"></div>
+  <div class="foot">
+   <button id="expmd">Exporter ce chat (.md)</button>
+   <button id="expjs">Tout sauvegarder (.json)</button>
+   <button id="imp">Importer une sauvegarde</button>
+  </div>
+ </aside>
+ <div id="ov"></div>
+ <main>
+  <header>
+   <button class="ib" id="menu" aria-label="Ouvrir l'historique">☰</button>
+   <h1 id="title">DevIA</h1>
+  </header>
+  <div id="msgs"><div class="col" id="col"></div></div>
+  <form class="cmp" id="form">
+   <div class="box">
+    <textarea id="in" rows="1" placeholder="Écris ton message" aria-label="Message"></textarea>
+    <button type="submit" id="go" aria-label="Envoyer">↑</button>
+   </div>
+   <p class="hint">Entrée pour envoyer, Maj+Entrée pour une nouvelle ligne</p>
+  </form>
+ </main>
+</div>
+
+<input type="file" id="file" accept="application/json" hidden>
+
+<script>
+const $=s=>document.querySelector(s);
+/* ====== COLLE TA CLÉ API ICI ====== */
+const API_KEY='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';
+const MODEL='';      // vide = modèle par défaut selon ta clé
+const BASE_URL='';   // vide = auto ; sinon URL d'une API compatible OpenAI (ex. https://api.mistral.ai/v1)
+const SYSTEM='Tu es DevIA, un assistant spécialisé en développement. Réponds en français, de façon claire et concise, avec du code commenté quand c\'est utile.';
+const CFG={model:MODEL,base:BASE_URL,system:SYSTEM};
+/* ================================== */
+const KEY='devia.v1';
+const PROVIDERS=[
+ {test:/^sk-ant-/,name:'Anthropic',type:'anthropic',base:'https://api.anthropic.com',model:'claude-sonnet-5-5'},
+ {test:/^sk-or-/,name:'OpenRouter',base:'https://openrouter.ai/api/v1',model:'openai/gpt-4o-mini'},
+ {test:/^gsk_/,name:'Groq',base:'https://api.groq.com/openai/v1',model:'llama-3.3-70b-versatile'},
+ {test:/^AIza/,name:'Google Gemini',base:'https://generativelanguage.googleapis.com/v1beta/openai',model:'gemini-2.0-flash'},
+ {test:/^xai-/,name:'xAI',base:'https://api.x.ai/v1',model:'grok-3-mini'},
+ {test:/^sk-/,name:'OpenAI',base:'https://api.openai.com/v1',model:'gpt-4o-mini'}
+];
+function prov(){
+ const p=PROVIDERS.find(x=>x.test.test(API_KEY)),c=CFG;
+ if(c.base)return{type:'openai',base:c.base,model:c.model||(p&&p.type!=='anthropic'&&p.model)||'gpt-4o-mini',name:'API personnalisée'};
+ if(p)return{type:p.type||'openai',base:p.base,model:c.model||p.model,name:p.name};
+ return null;
+}
+const fresh=()=>({convs:[],cur:null});
+let S;try{S=JSON.parse(localStorage.getItem(KEY))||fresh()}catch{S=fresh()}
+let busy=false,ctrl=null;
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch{}};
+const cur=()=>S.convs.find(c=>c.id===S.cur);
+const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+function md(t){
+ return t.split('```').map((p,i)=>{
+  if(i%2){const nl=p.indexOf('\n');const lang=nl>-1?p.slice(0,nl).trim():'';const code=nl>-1?p.slice(nl+1):p;
+   return '<pre><div class="bar"><span>'+esc(lang||'code')+'</span><button type="button" class="cp">Copier</button></div><code>'+esc(code.replace(/\n$/,''))+'</code></pre>'}
+  return esc(p).replace(/`([^`\n]+)`/g,'<code>$1</code>').replace(/\*\*([^*\n]+)\*\*/g,'<b>$1</b>').replace(/\n/g,'<br>');
+ }).join('');
+}
+
+function renderList(){
+ const l=$('#list');l.innerHTML='';
+ [...S.convs].sort((a,b)=>b.ts-a.ts).forEach(c=>{
+  const d=document.createElement('div');d.className='it'+(c.id===S.cur?' on':'');
+  d.innerHTML='<button class="t"></button><button class="x" aria-label="Supprimer">✕</button>';
+  d.querySelector('.t').textContent=c.title;
+  d.querySelector('.t').onclick=()=>{S.cur=c.id;save();closeSide();render()};
+  d.querySelector('.x').onclick=()=>{if(!confirm('Supprimer cette discussion ?'))return;S.convs=S.convs.filter(x=>x.id!==c.id);if(S.cur===c.id)S.cur=null;save();render()};
+  l.appendChild(d);
+ });
+}
+function botHTML(m,last){
+ const inner=m.error?'<span class="err">Erreur : '+esc(m.error)+'</span>':(m.content?md(m.content):(busy&&last?'<span class="dots"><span></span><span></span><span></span></span>':''));
+ return '<div class="who">DevIA</div><div class="body">'+inner+'</div>';
+}
+function status(){const P=prov();return 'Code, bugs, architecture : pose ta question.'+(P?' Connecté à '+P.name+' ('+P.model+').':'')}
+function renderMsgs(){
+ const col=$('#col'),c=cur();col.innerHTML='';
+ if(!c||!c.msgs.length){
+  col.innerHTML='<div class="empty"><h2>Que construit-on aujourd\'hui ?</h2><p>'+esc(status())+'</p><div class="chips"></div></div>';
+  ['Explique-moi les closures en JavaScript','Écris une API REST minimale en Python','Trouve le bug dans mon code'].forEach(t=>{
+   const b=document.createElement('button');b.textContent=t;b.onclick=()=>send(t);col.querySelector('.chips').appendChild(b)});
+  return;
+ }
+ c.msgs.forEach((m,i)=>{
+  const d=document.createElement('div');
+  if(m.role==='user'){d.className='m me';d.textContent=m.content}
+  else{d.className='m bot';d.innerHTML=botHTML(m,i===c.msgs.length-1)}
+  col.appendChild(d);
+ });
+}
+function render(){
+ renderList();renderMsgs();
+ $('#title').textContent=cur()?cur().title:'DevIA';
+ $('#go').textContent=busy?'■':'↑';
+ const s=$('#msgs');s.scrollTop=s.scrollHeight;
+}
+function updateLast(){
+ const c=cur(),m=c.msgs[c.msgs.length-1],el=$('#col').lastElementChild;
+ if(el)el.innerHTML=botHTML(m,true);
+ const s=$('#msgs');if(s.scrollHeight-s.scrollTop-s.clientHeight<160)s.scrollTop=s.scrollHeight;
+}
+function newChat(){
+ const c={id:Date.now().toString(36),title:'Nouvelle discussion',ts:Date.now(),msgs:[]};
+ S.convs.push(c);S.cur=c.id;save();return c;
+}
+
+async function stream(msgs,onTok,signal){
+ const c=CFG,P=prov(),h=msgs.filter(m=>m.content).map(m=>({role:m.role,content:m.content}));
+ let url,headers,body;
+ if(P.type==='anthropic'){
+  url='https://api.anthropic.com/v1/messages';
+  headers={'content-type':'application/json','x-api-key':API_KEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'};
+  body={model:P.model,max_tokens:4096,system:c.system||undefined,messages:h,stream:true};
+ }else{
+  url=P.base.replace(/\/$/,'')+'/chat/completions';
+  headers={'content-type':'application/json',authorization:'Bearer '+API_KEY};
+  body={model:P.model,messages:c.system?[{role:'system',content:c.system},...h]:h,stream:true};
+ }
+ const r=await fetch(url,{method:'POST',headers,body:JSON.stringify(body),signal});
+ if(!r.ok){let t=await r.text();try{t=JSON.parse(t).error.message||t}catch{}throw new Error(r.status+' : '+t)}
+ const rd=r.body.getReader(),dec=new TextDecoder();let buf='';
+ for(;;){
+  const{done,value}=await rd.read();if(done)break;
+  buf+=dec.decode(value,{stream:true});
+  const lines=buf.split('\n');buf=lines.pop();
+  for(const l of lines){
+   if(!l.startsWith('data:'))continue;
+   const d=l.slice(5).trim();if(!d||d==='[DONE]')continue;
+   try{const j=JSON.parse(d);
+    const t=P.type==='anthropic'?(j.type==='content_block_delta'&&j.delta&&j.delta.text):(j.choices&&j.choices[0]&&j.choices[0].delta&&j.choices[0].delta.content);
+    if(t)onTok(t)}catch{}
+  }
+ }
+}
+
+async function send(text){
+ if(busy)return;text=(text||'').trim();if(!text)return;
+ if(!API_KEY||API_KEY==='COLLE_TA_CLE_ICI'){alert('Ajoute ta clé API dans devia.html : constante API_KEY en haut du script.');return}
+ if(!prov()){alert('Clé non reconnue : renseigne BASE_URL dans devia.html (API compatible OpenAI).');return}
+ const c=cur()||newChat();
+ c.msgs.push({role:'user',content:text});
+ if(c.title==='Nouvelle discussion')c.title=text.slice(0,40);
+ const a={role:'assistant',content:''};c.msgs.push(a);c.ts=Date.now();
+ busy=true;ctrl=new AbortController();save();render();
+ try{await stream(c.msgs.slice(0,-1),t=>{a.content+=t;updateLast()},ctrl.signal)}
+ catch(e){if(e.name!=='AbortError')a.error=e.message||String(e)}
+ finally{busy=false;ctrl=null;if(!a.content&&!a.error)c.msgs.pop();save();render()}
+}
+
+/* Saisie */
+const inp=$('#in');
+const grow=()=>{inp.style.height='auto';inp.style.height=Math.min(inp.scrollHeight,200)+'px'};
+inp.addEventListener('input',grow);
+inp.addEventListener('keydown',e=>{
+ if(e.key==='Enter'&&!e.shiftKey&&matchMedia('(pointer:fine)').matches){e.preventDefault();$('#form').requestSubmit()}
+});
+$('#form').addEventListener('submit',e=>{
+ e.preventDefault();
+ if(busy){ctrl&&ctrl.abort();return}
+ const t=inp.value;if(!t.trim())return;
+ inp.value='';grow();send(t);
+});
+$('#col').addEventListener('click',e=>{
+ const b=e.target.closest('.cp');if(!b)return;
+ const txt=b.closest('pre').querySelector('code').textContent;
+ (navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(()=>{b.textContent='Copié'}).catch(()=>{b.textContent='Échec'});
+ setTimeout(()=>b.textContent='Copier',1400);
+});
+
+/* Navigation */
+const closeSide=()=>document.body.classList.remove('open');
+$('#menu').onclick=()=>document.body.classList.add('open');
+$('#ov').onclick=closeSide;
+$('#new').onclick=()=>{S.cur=null;save();closeSide();render();inp.focus()};
+
+/* Sauvegarde */
+function dl(name,txt,type){
+ const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([txt],{type}));a.download=name;
+ document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),2000);
+}
+$('#expmd').onclick=()=>{
+ const c=cur();if(!c)return alert('Aucune discussion ouverte.');
+ dl(c.title.replace(/[^\w-]+/g,'_')+'.md','# '+c.title+'\n\n'+c.msgs.map(m=>'**'+(m.role==='user'?'Moi':'DevIA')+'**\n\n'+m.content).join('\n\n---\n\n'),'text/markdown');
+};
+$('#expjs').onclick=()=>dl('devia-sauvegarde.json',JSON.stringify({convs:S.convs}),'application/json');
+$('#imp').onclick=()=>$('#file').click();
+$('#file').onchange=async e=>{
+ const f=e.target.files[0];if(!f)return;
+ try{
+  const j=JSON.parse(await f.text());const ids=new Set(S.convs.map(c=>c.id));
+  (j.convs||[]).forEach(c=>{if(c&&c.id&&Array.isArray(c.msgs)&&!ids.has(c.id))S.convs.push(c)});
+  save();render();
+ }catch{alert('Fichier invalide.')}
+ e.target.value='';
+};
+
+render();
+</script>
+</body>
+</html>
